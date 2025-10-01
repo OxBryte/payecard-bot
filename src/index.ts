@@ -13,7 +13,6 @@ import {
   sendBroadcast,
 } from "./commands";
 import { BotContext, BotSession } from "./services/bot/bot.interface";
-import { checkIsAdmin } from "./middlewares/isAdmin";
 
 dotenv.config();
 
@@ -57,7 +56,7 @@ bot.action("cmd_broadcast", async (ctx) => {
 bot.on("message", async (ctx: BotContext) => {
   const message = (ctx.message as any).text?.trim() ?? "";
 
-  // Handle broadcast messages (supports all message types)
+  // broadcast message (supports all message types)
   if (ctx.session.awaitingBroadcast) {
     // Check for cancel command
     if (message === "/cancel") {

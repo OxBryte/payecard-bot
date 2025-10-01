@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema(
     telegramId: { type: String, required: true, unique: true },
     username: String,
     email: String,
-    // watchlist: { type: [String], default: [] },
   },
   { timestamps: true }
 );
