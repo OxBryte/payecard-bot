@@ -16,7 +16,7 @@ export const CONFIG = {
 
   // Coingecko base from coingecko
   COINGECKO_BASE:
-    process.env.COINGECKO_BASE ?? "https://api.coingecko.com/api/v3",
+    process.env.COINGECKO_BASE ?? "",
   PORT: Number(process.env.PORT ?? 8080),
 };
 

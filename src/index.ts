@@ -1,7 +1,7 @@
 import { Telegraf, session } from "telegraf";
 import dotenv from "dotenv";
 import { CONFIG, logger } from "./config";
-import { connectMongo } from "./db/mongo";
+import { connectDatabase, disconnectDatabase } from "./database";
 import { User } from "./models/User";
 
 import {
@@ -13,6 +13,7 @@ import {
   sendBroadcast,
 } from "./commands";
 import { BotContext, BotSession } from "./services/bot/bot.interface";
+import { isValidEmail } from "./common/utils/validation";
 
 dotenv.config();
 
@@ -24,11 +25,6 @@ if (!token) {
 
 const bot = new Telegraf<BotContext>(token);
 bot.use(session({ defaultSession: (): BotSession => ({}) }));
-
-// Helper function for email validation for new users
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
 
 // All commands for the bot
 bot.start(startCommand as any);
@@ -104,7 +100,7 @@ bot.on("message", async (ctx: BotContext) => {
 // Start the bot only after MongoDB is connected
 async function startBot() {
   try {
-    await connectMongo();
+    await connectDatabase();
     logger.info("Starting bot...");
     await bot.launch();
     logger.info("Bot is running!");
@@ -117,5 +113,11 @@ async function startBot() {
 startBot();
 
 // Graceful shutdown
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+process.once("SIGINT", async () => {
+  bot.stop("SIGINT");
+  await disconnectDatabase();
+});
+process.once("SIGTERM", async () => {
+  bot.stop("SIGTERM");
+  await disconnectDatabase();
+});

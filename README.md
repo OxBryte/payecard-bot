@@ -2,29 +2,42 @@
 
 A production-minded Telegram bot built with **Node.js + Telegraf + MongoDB (Mongoose)**, implementing:
 
-- User registration (username + email)
-- Crypto prices via CoinGecko
-- Admin broadcast
-- Inline keyboards
-- Logging, error handling
-- Unit tests (Vitest)
+- **User Management** - Registration with email validation
+- **Crypto Prices** - Real-time token prices via CoinGecko
+- **Admin Broadcast** - Mass messaging with delivery tracking
+- **Event-Driven Architecture** - Events for background processing
+- **Dependency Injection** - Clean, testable SOLID architecture
 
 ## Setup
 
 1. Clone repo & install deps
    ```bash
    npm i
-   cp .env.example .env
-   # fill BOT_TOKEN, ADMIN_IDS, MONGODB_URI
    ```
-2. Dev
+2. Create `.env` file with:
+   ```bash
+   BOT_TOKEN=your_telegram_bot_token
+   ADMIN_IDS=123456789,987654321
+   MONGODB_URI=mongodb://localhost:27017/payecard
+   COINGECKO_BASE=https://api.coingecko.com/api/v3
+   PORT=8080
+   ```
+3. Run development server
    ```bash
    npm run dev
    ```
-3. Build & Start
+4. Build & Start
    ```bash
    npm run build && npm start
    ```
+
+## Docker
+
+```bash
+# Build and run
+docker build -t payecard-bot .
+docker run -d --name payecard-bot --env-file .env -p 8080:8080 payecard-bot
+```
 
 ## Commands
 
@@ -32,6 +45,16 @@ A production-minded Telegram bot built with **Node.js + Telegraf + MongoDB (Mong
 - `/popular` – shows top 10 trending or popular coins from coingecko api
 - `/broadcast <message(contains image, text, video)>` – **admin-only**
 - `/profile` - shows your profile information
+
+## Database Architecture
+
+The bot uses an **optimized MongoDB connection** with enterprise-grade features:
+
+- **Connection Pooling** - Min 2, Max 10 connections for optimal performance
+- **Auto-Retry Logic** - 5 retry attempts with exponential backoff
+- **Event Monitoring** - Real-time connection state tracking
+- **Shutdown** - Proper cleanup on shutdown
+- **Single Connection Pattern** - Single connection instance across the app
 
 ## Design Considerations
 
@@ -42,16 +65,11 @@ A production-minded Telegram bot built with **Node.js + Telegraf + MongoDB (Mong
 - Secrets via env vars. Never commit `.env`.
 - Admin allowlist via `ADMIN_IDS`.
 
-## Testing
-
-```bash
-npm test
-```
-
 ## Deployment Notes
 
-- Works on any Node host (AWS/Render/Railway/Heroku/Docker). Docker compose includes Mongo.
-- Healthcheck on `PORT` for uptime pings.
+- Works on any Node host (AWS/Render/Railway/Heroku)
+- Docker Compose includes MongoDB with persistent volumes
+- Automatic restart on failure
 
 ## Submission Details
 
