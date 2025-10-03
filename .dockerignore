@@ -59,6 +59,5 @@ logs
 .npmrc
 .prettierrc
 .eslintrc*
-tsconfig.json
 nodemon.json
 
