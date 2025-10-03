@@ -26,9 +26,10 @@ A production-minded Telegram bot built with **Node.js + Telegraf + MongoDB (Mong
    ```bash
    npm run dev
    ```
-4. Build & Start
+4. Production build & start
    ```bash
-   npm run build && npm start
+   npm run build
+   npm start
    ```
 
 ## Docker
